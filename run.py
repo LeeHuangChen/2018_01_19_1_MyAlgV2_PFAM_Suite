@@ -1,6 +1,7 @@
 import configurations as conf
 from src import GenFasta, util
 from src import blast_suite as blast
+from cPickle import dump
 import os
 
 
@@ -18,25 +19,40 @@ def read_families():
     return families
 
 
+def runAlgOnOneFamily(family):
+    fam_name=family[1]
+    numprot=family[0]
+
+    # generate fasta sequence
+    outfolder = conf.fastaFolder
+    util.generateDirectories(outfolder)
+    famFilename = str(numprot) + "_" + fam_name
+    outdir = os.path.join(outfolder, famFilename)
+    GenFasta.GenerateFastaInputForGivenFamily(fam_name, outdir)
+
+    # generate protein lengths
+    plenFolder = conf.proteinLenFolder
+    util.generateDirectories(plenFolder)
+    plenDict = blast.generateProtLenDict(conf.fastaFolder, famFilename)
+    dump(plenDict, open(os.path.join(plenFolder, famFilename),"wb"))
+
+    # create blast databases
+    blast.makeblastdb(conf.fastaFolder, famFilename)
+
+    # conduct all to all BLASTp
+    alltoallFolder = conf.alltoallFolder
+    util.generateDirectories(alltoallFolder)
+    blast.alltoallBlastP(conf.fastaFolder, famFilename,os.path.join(alltoallFolder,famFilename))
+
+
+
+
 def main():
     # load all families in PFam
     families = read_families()
     families.sort(key=lambda x: x[0])
 
-    # generate 1 family
-    outfolder = conf.fastaFolder
-    util.generateDirectories(outfolder)
-    fam_name = families[0][1]
-    famFilename = fam_name + ".txt"
-    outdir = os.path.join(outfolder, famFilename)
-
-    GenFasta.GenerateFastaInputForGivenFamily(fam_name, outdir)
-
-    # generate protein lengths
-    util.generateDirectories(conf.proteinLenFolder)
-    blast.generateProtLenDict(conf.fastaFolder, famFilename)
-
-
+    runAlgOnOneFamily(families[0])
 
 
 if __name__ == '__main__':
