@@ -1,9 +1,9 @@
-import os, re
-from cPickle import dump, load, HIGHEST_PROTOCOL
+import os
+from cPickle import load
 import networkx as nx
 import configurations as conf
 import util
-import sys
+
 
 
 def overlap(s1start, s1end, s2start, s2end):
@@ -88,7 +88,7 @@ def findOverlapIntervalsMutual(name1, name2, cutoffRatio):
     interval2Start = int(name2[1])
     interval2End = int(name2[2])
 
-    overlapInt = util.overlap(interval1Start, interval1End, interval2Start, interval2End)
+    overlapInt = overlap(interval1Start, interval1End, interval2Start, interval2End)
     intervalLen1 = interval1End - interval1Start
     intervalLen2 = interval2End - interval2Start
 
@@ -118,49 +118,55 @@ def addToDict(dictionary, key, append):
         dictionary[key] = [append]
 
 
-def build_graph(blastInfoFilename, blastdir, hspIntGraphdir, cutoffRatio, evalueCutoff):
-    # Generate the output folder
-    util.generateDirectories(hspIntGraphdir)
+def build_graph(blastInfoFilename, blastdir):
+
+    cutoffRatio = conf.cutoffRatio
+    evalueCutoff = conf.evalueCutoff
 
     g = nx.Graph()
-
-    # read the file
-    f = open(os.path.join(blastdir, blastInfoFilename), "r")
-    content = f.read()
-    f.close()
 
     # a dictionary that stores node names by the protein names
     nodeNames = {}
 
+    # load protein lengths (this assumes that the filename is the same as the input filename
+    protLenDict=load(open(os.path.join(conf.proteinLenFolder, blastInfoFilename), "rb"))
+
+    numlines = len(open(os.path.join(blastdir, blastInfoFilename), "r").readlines())
     # add the HSP edges
-    for i, line in enumerate(content.split("\n")):
-        if (i % (len(content.split("\n")) / 10) == 0):
-            # sys.stdout.write(str(int(float(10*i)/float(len(content.split("\n"))))))
-            sys.stdout.write("*")
-            sys.stdout.flush()
-        if len(line) > 0:
-            hsp = read_HSP(line)
-            goodeval = hsp["EValue"] < evalueCutoff
-            notsameprotein = (hsp["query_id"] != hsp["target_id"])
-            if goodeval and notsameprotein:
-                # Add the nodes (p_1,s_1,e_1) and (p_2,s_2,e_2) and create an edge between them
-                g.add_node(nodeName(hsp, "query"))
-                g.add_node(nodeName(hsp, "target"))
-                g.add_edge(nodeName(hsp, "query"), nodeName(hsp, "target"), eValue=hsp["EValue"])
+    util.progressbarGuide(20)
+    with open(os.path.join(blastdir, blastInfoFilename), "r") as f:
+        for i, line in enumerate(f):
+            util.progressbar(i, numlines, 20)
 
-                # add the two node names to the nodeNames dictionary and take away the duplicates
-                addToDict(nodeNames, nodeName(hsp, "query")[0], nodeName(hsp, "query"))
-                addToDict(nodeNames, nodeName(hsp, "target")[0], nodeName(hsp, "target"))
+            if len(line) > 0:
+                hsp = read_HSP(line)
+                goodeval = hsp["EValue"] < evalueCutoff
+                query = hsp["query_id"]
+                subject = hsp["target_id"]
+                qLen = hsp["query_len"]
+                sLen = hsp["target_len"]
 
-    sys.stdout.write("\n")
-    sys.stdout.flush()
+                # filter out similar proteins
+                sameID = (query != subject)
+                wholeProt1 = (abs(qLen - protLenDict[query])/float(protLenDict[query])) > conf.simularProteinRatio
+                wholeProt2 = (abs(sLen - protLenDict[subject])/float(protLenDict[subject])) > conf.simularProteinRatio
+
+                notsameprotein = (not sameID) and (not (wholeProt1 and wholeProt2))
+
+                if goodeval and notsameprotein:
+                    # Add the nodes (p_1,s_1,e_1) and (p_2,s_2,e_2) and create an edge between them
+                    g.add_node(nodeName(hsp, "query"))
+                    g.add_node(nodeName(hsp, "target"))
+                    g.add_edge(nodeName(hsp, "query"), nodeName(hsp, "target"), eValue=hsp["EValue"])
+
+                    # add the two node names to the nodeNames dictionary and take away the duplicates
+                    addToDict(nodeNames, nodeName(hsp, "query")[0], nodeName(hsp, "query"))
+                    addToDict(nodeNames, nodeName(hsp, "target")[0], nodeName(hsp, "target"))
 
     # add the Interval edges
     proteins = nodeNames.keys()
+    numIntEdge = 0
     for protein in proteins:
-        # if(i%(len(proteins)/10)==0):
-        #     sys.stdout.write("*")
-        #     sys.stdout.flush()
         subNodeNames = nodeNames[protein]
         for i in xrange(len(subNodeNames) - 1):
             for j in xrange(i + 1, len(subNodeNames)):
@@ -171,24 +177,23 @@ def build_graph(blastInfoFilename, blastdir, hspIntGraphdir, cutoffRatio, evalue
 
                 for overlapPair in overlapPairs:
                     g.add_edge(overlapPair[0], overlapPair[1])
-    # sys.stdout.write("\n")
-    # sys.stdout.flush()
+                    numIntEdge += 1
+    print "number of IntervalEdges added:", numIntEdge
+    # # save the HSPIntGraph
+    # splitFilename = blastInfoFilename.split(".")
+    # fileExt = "." + splitFilename[len(splitFilename) - 1]
+    # outputFile = blastInfoFilename.replace(fileExt, "") + '_HSPIntGraph.gpickle'
+    # outputPath = os.path.join(hspIntGraphdir, outputFile)
+    # with open(outputPath, 'wb') as fout:
+    #     dump(g, fout, HIGHEST_PROTOCOL)
 
-    # save the HSPIntGraph
-    splitFilename = blastInfoFilename.split(".")
-    fileExt = "." + splitFilename[len(splitFilename) - 1]
-    outputFile = blastInfoFilename.replace(fileExt, "") + '_HSPIntGraph.gpickle'
-    outputPath = os.path.join(hspIntGraphdir, outputFile)
-    with open(outputPath, 'wb') as fout:
-        dump(g, fout, HIGHEST_PROTOCOL)
-
-    return outputFile
+    return g
 
 
-def main(blastInfoFilename):
-    # blastdir=conf.blastdir
-    hspIntGraphdir = conf.hspIntGraphdir
-    cutoffRatio = conf.cutoffRatio
-    evalueCutoff = conf.evalueCutoff
-    blastdir = conf.blastdir
-    return build_graph(blastInfoFilename, blastdir, hspIntGraphdir, cutoffRatio, evalueCutoff)
+# def main(blastInfoFilename):
+#     # blastdir=conf.blastdir
+#     hspIntGraphdir = conf.hspIntGraphdir
+#     cutoffRatio = conf.cutoffRatio
+#     evalueCutoff = conf.evalueCutoff
+#     blastdir = conf.blastdir
+#     return build_graph(blastInfoFilename, blastdir, hspIntGraphdir, cutoffRatio, evalueCutoff)

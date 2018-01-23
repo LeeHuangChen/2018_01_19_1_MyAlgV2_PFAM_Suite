@@ -21,7 +21,7 @@ def generateDirectoriesMult(paths):
 def progressbar(i, length, numberNotification):
     scale = length / numberNotification
     if scale > 0:
-        if (i % scale == 0):
+        if i % scale == 0:
             sys.stdout.write('*')
             if length - i < scale:
                 sys.stdout.write('\n')

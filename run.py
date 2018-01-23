@@ -1,6 +1,7 @@
 import configurations as conf
 from src import GenFasta, util
 from src import blast_suite as blast
+from src import build_HSPInt_graph as buildGraph
 from cPickle import dump
 import os
 
@@ -42,7 +43,10 @@ def runAlgOnOneFamily(family):
     # conduct all to all BLASTp
     alltoallFolder = conf.alltoallFolder
     util.generateDirectories(alltoallFolder)
-    blast.alltoallBlastP(conf.fastaFolder, famFilename,os.path.join(alltoallFolder,famFilename))
+    blast.alltoallBlastP(conf.fastaFolder, famFilename,os.path.join(alltoallFolder, famFilename))
+
+    # build HSPIntGraph
+    seqSimGraph = buildGraph.build_graph(famFilename, conf.alltoallFolder)
 
 
 
