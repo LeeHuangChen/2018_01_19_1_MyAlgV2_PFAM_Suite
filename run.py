@@ -1,5 +1,6 @@
 import configurations as conf
 from src import GenFasta, util
+from src import blast_suite as blast
 import os
 
 
@@ -26,11 +27,16 @@ def main():
     outfolder = conf.fastaFolder
     util.generateDirectories(outfolder)
     fam_name = families[0][1]
-    outdir = os.path.join(outfolder, fam_name + ".txt")
+    famFilename = fam_name + ".txt"
+    outdir = os.path.join(outfolder, famFilename)
 
     GenFasta.GenerateFastaInputForGivenFamily(fam_name, outdir)
 
-    #
+    # generate protein lengths
+    util.generateDirectories(conf.proteinLenFolder)
+    blast.generateProtLenDict(conf.fastaFolder, famFilename)
+
+
 
 
 if __name__ == '__main__':
