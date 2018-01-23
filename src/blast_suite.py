@@ -12,7 +12,7 @@ def generateProtLenDict(sequenceFolder, filename):
     for seq in seqs:
         protName = seq.description.split("[")[0].strip()
         protLenDict[protName] = len(seq)
-    return generateProtLenDict
+    return protLenDict
 
 
 def makeblastdb(sequenceFolder, filename):
