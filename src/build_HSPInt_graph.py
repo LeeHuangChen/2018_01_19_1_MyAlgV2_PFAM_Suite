@@ -5,7 +5,6 @@ import configurations as conf
 import util
 
 
-
 def overlap(s1start, s1end, s2start, s2end):
     maxstart = max(s1start, s2start)
     minend = min(s1end, s2end)

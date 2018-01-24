@@ -49,8 +49,6 @@ def runAlgOnOneFamily(family):
     seqSimGraph = buildGraph.build_graph(famFilename, conf.alltoallFolder)
 
 
-
-
 def main():
     # load all families in PFam
     families = read_families()
