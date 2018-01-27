@@ -2,6 +2,7 @@ import configurations as conf
 from src import GenFasta, util
 from src import blast_suite as blast
 from src import build_HSPInt_graph as buildGraph
+from src import defineBordersFromGraph as findBorders
 from cPickle import dump
 import os
 
@@ -47,6 +48,9 @@ def runAlgOnOneFamily(family):
 
     # build HSPIntGraph
     seqSimGraph = buildGraph.build_graph(famFilename, conf.alltoallFolder)
+
+    # identify protein module borders
+    findBorders.generatePutativeModules(seqSimGraph)
 
 
 def main():

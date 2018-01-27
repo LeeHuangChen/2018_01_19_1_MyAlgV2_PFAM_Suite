@@ -56,10 +56,10 @@ def collapsOverlappingBorders(borders):
         overlapInfo = containsOverlapBorders(borders)
 
 
-def generatePutativeModules(g, borderInfodir, borderResultdir):
-    # generate the directories
-    util.generateDirectories(borderInfodir)
-    util.generateDirectories(borderResultdir)
+def generatePutativeModules(g):
+    # # generate the directories
+    # util.generateDirectories(borderInfodir)
+    # util.generateDirectories(borderResultdir)
 
     # with open(os.path.join(hspIntGraphdir, graphFile)) as fin:
     #     g = load(fin)
@@ -89,39 +89,12 @@ def generatePutativeModules(g, borderInfodir, borderResultdir):
         collapsOverlappingBorders(modulefamilyinfo[protein])
 
     return len(CCgraphs), modulefamilyinfo
-    # # save the border information dataset
-    # with open(os.path.join(borderInfodir, graphFile.replace('_HSPIntGraph.gpickle', "") + '_BorderInformation.gpickle'),
-    #           'wb') as fout:
-    #     moduleNumInfo = ("Number of modules detected", len(CCgraphs))
-    #     familyInfoWrap = (
-    #     "ModuleFamilyInfo, Format: Dict\{proteinName, list[borders[moduleId,start,end]] \}", modulefamilyinfo)
-    #     dump((moduleNumInfo, familyInfoWrap), fout, HIGHEST_PROTOCOL)
-    #
-    # # write the information down in a text file.
-    # resultFile = open(os.path.join(borderResultdir, graphFile.replace('_HSPIntGraph.gpickle', "") + '_ModuleInfo.txt'),
-    #                   "w")
-    # resultFile.write("Number of modules detected: " + str(len(CCgraphs)) + "\n\n")
-    # resultFile.write("proteinName\t borders\n")
-    # proteins = modulefamilyinfo.keys()
-    # proteins.sort()
-    #
-    # for protein in proteins:
-    #     resultFile.write(protein)
-    #     borders = modulefamilyinfo[protein]
-    #     for border in borders:
-    #         moduleID = border[0]
-    #         start = border[1]
-    #         end = border[2]
-    #         resultFile.write("\tM_" + str(moduleID) + "(" + str(start) + "," + str(end) + ")")
-    #     resultFile.write("\n")
-    # resultFile.close()
-    #
-    # return 0
 
 
-# def main(graphFile):
-#     hspIntGraphdir = conf.hspIntGraphdir
-#     borderInfodir = conf.borderInfodir
-#     borderResultdir = conf.borderResultdir
-#     defineBordersFromGraph(graphFile, hspIntGraphdir, borderInfodir, borderResultdir)
-#     return 0
+def defineBorders(modulefamilyinfo):
+    for protein in modulefamilyinfo.keys():
+        modules = modulefamilyinfo[protein]
+        for M1 in modules:
+            for M2 in modules:
+                print M1
+                print M2
