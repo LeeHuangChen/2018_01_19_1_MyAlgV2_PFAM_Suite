@@ -3,8 +3,10 @@ from src import GenFasta, util
 from src import blast_suite as blast
 from src import build_HSPInt_graph as buildGraph
 from src import defineBordersFromGraph as findBorders
+from src import visualization as vis
 from cPickle import dump
 import os
+import datetime
 
 
 def read_families():
@@ -21,36 +23,40 @@ def read_families():
     return families
 
 
-def runAlgOnOneFamily(family):
-    fam_name=family[1]
-    numprot=family[0]
+def runAlg(families):
+    # fam_name=family[1]
+    # numprot=family[0]
 
     # generate fasta sequence
     outfolder = conf.fastaFolder
     util.generateDirectories(outfolder)
-    famFilename = str(numprot) + "_" + fam_name
-    outdir = os.path.join(outfolder, famFilename)
-    GenFasta.GenerateFastaInputForGivenFamily(fam_name, outdir)
+    #filename = str(numprot) + "_" + fam_name
+    filename = datetime.datetime.now().strftime("%Y%m%d_%I%p")+"_"+families[0][1]
+    outdir = os.path.join(outfolder, filename)
+    GenFasta.GenerateFastaInputForMultiFamilies(families, outdir)
 
     # generate protein lengths
     plenFolder = conf.proteinLenFolder
     util.generateDirectories(plenFolder)
-    plenDict = blast.generateProtLenDict(conf.fastaFolder, famFilename)
-    dump(plenDict, open(os.path.join(plenFolder, famFilename),"wb"))
+    plenDict = blast.generateProtLenDict(conf.fastaFolder, filename)
+    dump(plenDict, open(os.path.join(plenFolder, filename), "wb"))
 
     # create blast databases
-    blast.makeblastdb(conf.fastaFolder, famFilename)
+    blast.makeblastdb(conf.fastaFolder, filename)
 
     # conduct all to all BLASTp
     alltoallFolder = conf.alltoallFolder
     util.generateDirectories(alltoallFolder)
-    blast.alltoallBlastP(conf.fastaFolder, famFilename,os.path.join(alltoallFolder, famFilename))
+    blast.alltoallBlastP(conf.fastaFolder, filename,os.path.join(alltoallFolder, filename))
 
     # build HSPIntGraph
-    seqSimGraph = buildGraph.build_graph(famFilename, conf.alltoallFolder)
+    seqSimGraph = buildGraph.build_graph(filename, conf.alltoallFolder)
 
     # identify protein module borders
-    findBorders.generatePutativeModules(seqSimGraph)
+    numModules, moduleFamilyInfo = findBorders.generatePutativeModules(seqSimGraph)
+    print vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
+    findBorders.removeSubModules(moduleFamilyInfo)
+    print vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
 
 
 def main():
@@ -58,7 +64,7 @@ def main():
     families = read_families()
     families.sort(key=lambda x: x[0])
 
-    runAlgOnOneFamily(families[0])
+    runAlg([families[1], families[2]])
 
 
 if __name__ == '__main__':

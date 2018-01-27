@@ -151,7 +151,7 @@ def build_graph(blastInfoFilename, blastdir):
                 wholeProt2 = (abs(sLen - protLenDict[subject])/float(protLenDict[subject])) > conf.simularProteinRatio
 
                 notsameprotein = (not sameID) and (not (wholeProt1 and wholeProt2))
-
+                # notsameprotein = (not sameID)
                 if goodeval and notsameprotein:
                     # Add the nodes (p_1,s_1,e_1) and (p_2,s_2,e_2) and create an edge between them
                     g.add_node(nodeName(hsp, "query"))

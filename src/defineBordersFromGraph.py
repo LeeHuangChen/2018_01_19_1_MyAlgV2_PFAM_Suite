@@ -91,10 +91,32 @@ def generatePutativeModules(g):
     return len(CCgraphs), modulefamilyinfo
 
 
-def defineBorders(modulefamilyinfo):
-    for protein in modulefamilyinfo.keys():
-        modules = modulefamilyinfo[protein]
-        for M1 in modules:
-            for M2 in modules:
-                print M1
-                print M2
+def checkForSubModules(modules):
+
+    for i, M1 in enumerate(modules):
+        for j, M2 in enumerate(modules):
+            if i != j:
+                s1 = M1[1]
+                e1 = M1[2]
+
+                s2 = M2[1]
+                e2 = M2[2]
+
+                M1_in_M2 = (s2 <= s1) and (e2 >= e1)
+                M2_in_M1 = (s1 <= s2) and (e1 >= e2)
+
+                if M1_in_M2:
+                    return i  # returns the index of the module that is to be removed
+                if M2_in_M1:
+                    return j  # returns the index of the module that is to be removed
+    return -1
+
+
+def removeSubModules(moduleFamilyInfo):
+    for protein in moduleFamilyInfo.keys():
+        modules = moduleFamilyInfo[protein]
+        removeIndex = checkForSubModules(modules)
+        while removeIndex != -1:
+            modules.pop(removeIndex)
+            removeIndex = checkForSubModules(modules)
+
