@@ -38,7 +38,7 @@ def GenerateFastaInputForGivenFamily(famName, outfiledir):
 
 # assumes FamilyToArr dict is generated
 # assumes pidToBioSeqDict is also generated
-def GenerateFastaInputForMultiFamilies(families, outfiledir):
+def GenerateFastaInputForMultiFamilies(famNames, outfiledir):
     # import the FamToArrDict
     with open(conf.FamToArrDictLoc, "rb") as f:
         FamToArrDict = load(f)
@@ -46,8 +46,7 @@ def GenerateFastaInputForMultiFamilies(families, outfiledir):
         pidToBioSeqDict = load(f)
 
     pfamRows = []
-    for family in families:
-        famName = family[1]
+    for famName in famNames:
         pfamRows += FamToArrDict[famName]
 
     proteinIDs = []

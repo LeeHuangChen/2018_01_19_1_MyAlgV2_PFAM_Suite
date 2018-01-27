@@ -91,12 +91,44 @@ def findOverlapIntervalsMutual(name1, name2, cutoffRatio):
     intervalLen1 = interval1End - interval1Start
     intervalLen2 = interval2End - interval2Start
 
+    # overlapRatio1 = float(abs(overlapInt - intervalLen1)) / float(intervalLen1)
+    # overlapRatio2 = float(abs(overlapInt - intervalLen2)) / float(intervalLen2)
+    overlapRatio1 = float(overlapInt) / float(intervalLen1)
+    overlapRatio2 = float(overlapInt) / float(intervalLen2)
+
+    # maxOverlapRatio=max(overlapRatio1, overlapRatio2)
+
+    if name1[0] != name2[0]:
+        print "Error!!! ", name1, name2
+
+    # add the nodeNamePair to nodeNamePairs
+    # if maxOverlapRatio>cutoffRatio:
+    if overlapRatio1 < cutoffRatio and overlapRatio2 < cutoffRatio:
+        # print name1,name2
+        nodeNamePairs.append((name1, name2))
+
+    return nodeNamePairs
+
+
+def findOverlapIntervalsMutualOld(name1, name2):
+    cutoffRatio = conf.cutoffRatio
+    nodeNamePairs = []
+
+    interval1Start = int(name1[1])
+    interval1End = int(name1[2])
+    interval2Start = int(name2[1])
+    interval2End = int(name2[2])
+
+    overlapInt = overlap(interval1Start, interval1End, interval2Start, interval2End)
+    intervalLen1 = interval1End - interval1Start
+    intervalLen2 = interval2End - interval2Start
+
     overlapRatio1 = float(abs(overlapInt - intervalLen1)) / float(intervalLen1)
     overlapRatio2 = float(abs(overlapInt - intervalLen2)) / float(intervalLen2)
 
     # maxOverlapRatio=max(overlapRatio1, overlapRatio2)
 
-    if name1[0] != name2[0]:
+    if (name1[0] != name2[0]):
         print "Error!!! ", name1, name2
 
     # add the nodeNamePair to nodeNamePairs
@@ -146,9 +178,9 @@ def build_graph(blastInfoFilename, blastdir):
                 sLen = hsp["target_len"]
 
                 # filter out similar proteins
-                sameID = (query != subject)
-                wholeProt1 = (abs(qLen - protLenDict[query])/float(protLenDict[query])) > conf.simularProteinRatio
-                wholeProt2 = (abs(sLen - protLenDict[subject])/float(protLenDict[subject])) > conf.simularProteinRatio
+                sameID = (query == subject)
+                wholeProt1 = (abs(qLen - protLenDict[query])/float(protLenDict[query])) < conf.simularProteinRatio
+                wholeProt2 = (abs(sLen - protLenDict[subject])/float(protLenDict[subject])) < conf.simularProteinRatio
 
                 notsameprotein = (not sameID) and (not (wholeProt1 and wholeProt2))
                 # notsameprotein = (not sameID)
@@ -167,13 +199,15 @@ def build_graph(blastInfoFilename, blastdir):
     numIntEdge = 0
     for protein in proteins:
         subNodeNames = nodeNames[protein]
+        # print subNodeNames
         for i in xrange(len(subNodeNames) - 1):
             for j in xrange(i + 1, len(subNodeNames)):
                 name1 = subNodeNames[i]
                 name2 = subNodeNames[j]
 
                 overlapPairs = findOverlapIntervalsMutual(name1, name2, cutoffRatio)
-
+                # overlapPairs = findOverlapIntervalsMutualOld(name1, name2)
+                # print "test"
                 for overlapPair in overlapPairs:
                     g.add_edge(overlapPair[0], overlapPair[1])
                     numIntEdge += 1

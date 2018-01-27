@@ -23,7 +23,7 @@ def read_families():
     return families
 
 
-def runAlg(families):
+def runAlg(FamNames):
     # fam_name=family[1]
     # numprot=family[0]
 
@@ -31,9 +31,9 @@ def runAlg(families):
     outfolder = conf.fastaFolder
     util.generateDirectories(outfolder)
     #filename = str(numprot) + "_" + fam_name
-    filename = datetime.datetime.now().strftime("%Y%m%d_%I%p")+"_"+families[0][1]
+    filename = datetime.datetime.now().strftime("%Y%m%d_%I%p")+"_"+FamNames[0]
     outdir = os.path.join(outfolder, filename)
-    GenFasta.GenerateFastaInputForMultiFamilies(families, outdir)
+    GenFasta.GenerateFastaInputForMultiFamilies(FamNames, outdir)
 
     # generate protein lengths
     plenFolder = conf.proteinLenFolder
@@ -56,7 +56,13 @@ def runAlg(families):
     numModules, moduleFamilyInfo = findBorders.generatePutativeModules(seqSimGraph)
     print vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
     findBorders.removeSubModules(moduleFamilyInfo)
+    moduleResult = vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
     print vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
+    # output the results
+    util.generateDirectories(conf.bordersFolder)
+    outpath = os.path.join(conf.bordersFolder, filename+"_Modules.txt")
+    with open(outpath, "w") as f:
+        f.write(moduleResult)
 
 
 def main():
@@ -64,7 +70,13 @@ def main():
     families = read_families()
     families.sort(key=lambda x: x[0])
 
-    runAlg([families[1], families[2]])
+    famNames = []
+    for family in families:
+        famNames.append(family[1])
+    #runAlg([families[1], families[2]])
+
+    for famName in ["Neur_chan_memb"]:
+        runAlg([famName])
 
 
 if __name__ == '__main__':
