@@ -3,7 +3,7 @@
 cutoffRatio = .60
 evalueCutoff = 1e-4
 # The amount of overlap two proteins need to have to be consider the "same" protein
-simularProteinRatio = .10
+simularProteinRatio = .90
 
 # main core folders
 fastaFolder = "Generated/0_FastaSequence"

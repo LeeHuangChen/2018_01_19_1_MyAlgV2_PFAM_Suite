@@ -179,8 +179,8 @@ def build_graph(blastInfoFilename, blastdir):
 
                 # filter out similar proteins
                 sameID = (query == subject)
-                wholeProt1 = (abs(qLen - protLenDict[query])/float(protLenDict[query])) < conf.simularProteinRatio
-                wholeProt2 = (abs(sLen - protLenDict[subject])/float(protLenDict[subject])) < conf.simularProteinRatio
+                wholeProt1 = (abs(qLen)/float(protLenDict[query])) > conf.simularProteinRatio
+                wholeProt2 = (abs(sLen)/float(protLenDict[subject])) > conf.simularProteinRatio
 
                 notsameprotein = (not sameID) and (not (wholeProt1 and wholeProt2))
                 # notsameprotein = (not sameID)
