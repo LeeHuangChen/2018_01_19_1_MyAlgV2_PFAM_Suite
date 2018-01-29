@@ -103,7 +103,7 @@ def findOverlapIntervalsMutual(name1, name2, cutoffRatio):
 
     # add the nodeNamePair to nodeNamePairs
     # if maxOverlapRatio>cutoffRatio:
-    if overlapRatio1 < cutoffRatio and overlapRatio2 < cutoffRatio:
+    if overlapRatio1 > cutoffRatio and overlapRatio2 > cutoffRatio:
         # print name1,name2
         nodeNamePairs.append((name1, name2))
 

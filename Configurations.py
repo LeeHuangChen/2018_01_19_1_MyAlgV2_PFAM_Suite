@@ -5,13 +5,14 @@ evalueCutoff = 1e-4
 # The amount of overlap two proteins need to have to be consider the "same" protein
 simularProteinRatio = .90
 
+numProteinInDataset = 1000
+
 # main core folders
 fastaFolder = "Generated/0_FastaSequence"
 proteinLenFolder = "Generated/1_ProteinLength"
 blastdbFolder = "Generated/2_BlastDB"
 alltoallFolder = "Generated/3_BlastAllToAll"
-#seqSimGraphFolder = "Generated/4_SequenceSimilarityGraphs"
-bordersFolder = "Results"
+resultsFolder = "Results"
 
 # Sequence Generation
 FastaSeqDict = "Resources/FastaSeqDict.cpickle"

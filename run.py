@@ -23,7 +23,7 @@ def read_families():
     return families
 
 
-def runAlg(FamNames):
+def runAlg(FamNames, filename):
     # fam_name=family[1]
     # numprot=family[0]
 
@@ -31,7 +31,7 @@ def runAlg(FamNames):
     outfolder = conf.fastaFolder
     util.generateDirectories(outfolder)
     #filename = str(numprot) + "_" + fam_name
-    filename = datetime.datetime.now().strftime("%Y%m%d_%I%p")+"_"+FamNames[0]
+
     outdir = os.path.join(outfolder, filename)
     GenFasta.GenerateFastaInputForMultiFamilies(FamNames, outdir)
 
@@ -53,16 +53,35 @@ def runAlg(FamNames):
     seqSimGraph = buildGraph.build_graph(filename, conf.alltoallFolder)
 
     # identify protein module borders
+    # putative domains
     numModules, moduleFamilyInfo = findBorders.generatePutativeModules(seqSimGraph)
-    print vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
+    putativeResult = vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
+
+    # remove submodules
     findBorders.removeSubModules(moduleFamilyInfo)
     moduleResult = vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
-    print vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
+    # print moduleResult
+
+    # rename modules to have lower numbers
+    numModulesAfterFilter = findBorders.renameModules(moduleFamilyInfo)
+    moduleResultRenamed = vis.visualizeModuleFamilyInfo(moduleFamilyInfo)
+    # print "numberOfModules: ", numModulesAfterFilter
+    # print moduleResultRenamed
+
     # output the results
-    util.generateDirectories(conf.bordersFolder)
-    outpath = os.path.join(conf.bordersFolder, filename+"_Modules.txt")
-    with open(outpath, "w") as f:
-        f.write(moduleResult)
+    util.generateDirectories(conf.resultsFolder)
+
+    consizePath = os.path.join(conf.resultsFolder, filename + "_Modules.txt")
+    with open(consizePath, "w") as f:
+        f.write(moduleResultRenamed)
+
+    detailedPath = os.path.join(conf.resultsFolder, filename + "_detailedResults.txt")
+    with open(detailedPath, "w") as f:
+        f.write("Putative Domains: " + str(numModules) + "\n" + putativeResult + "\n")
+        f.write("RemoveSubModules: \n" + moduleResult + "\n")
+        f.write("Final Module Definition: " + str(numModulesAfterFilter) + "\n" + moduleResultRenamed + "\n")
+
+
 
 
 def main():
@@ -70,13 +89,19 @@ def main():
     families = read_families()
     families.sort(key=lambda x: x[0])
 
-    famNames = []
-    for family in families:
-        famNames.append(family[1])
-    #runAlg([families[1], families[2]])
+    # famNames = []
+    # util.generateDirectories(conf.resultsFolder)
+    #
+    # for family in families:
+    #
+    #     famNames.append(family[1])
+    #
+    #     filename = datetime.datetime.now().strftime("%Y%m%d_%I%p") + "_" + famNames[0]
+    # #runAlg([families[1], families[2]])
 
-    for famName in ["Neur_chan_memb"]:
-        runAlg([famName])
+    famNames = ["Neur_chan_memb"]
+    filename = datetime.datetime.now().strftime("%Y%m%d_%I%p") + "_" + famNames[0]
+    runAlg(famNames, filename)
 
 
 if __name__ == '__main__':

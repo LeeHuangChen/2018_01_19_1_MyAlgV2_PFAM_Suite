@@ -120,3 +120,21 @@ def removeSubModules(moduleFamilyInfo):
             modules.pop(removeIndex)
             removeIndex = checkForSubModules(modules)
 
+
+# renames all of the module labels from 1 so the numbers are smaller
+# returns the number of modules identified
+def renameModules(moduleFamilyInfo):
+    moduleCounter = 1
+    moduleDict = {}
+    for protein in moduleFamilyInfo.keys():
+        modules = moduleFamilyInfo[protein]
+        for module in modules:
+            moduleName = module[0]
+            if moduleName in moduleDict.keys():
+                module[0] = moduleDict[moduleName]
+            else:
+                module[0] = moduleCounter
+                moduleDict[moduleName] = moduleCounter
+                moduleCounter += 1
+
+    return moduleCounter - 1
