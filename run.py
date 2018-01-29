@@ -83,10 +83,17 @@ def runAlg(FamNames, filename):
         f.write("Final Module Definition: " + str(numModulesAfterFilter) + "\n" + moduleResultRenamed + "\n")
 
     # compare the borders with pfam definitions side by side
-    comparePFamVis = pfamComp.visualizeResultsWithPFam(moduleFamilyInfo)
+    pFamDict = pfamComp.correspondingPFamDict(moduleFamilyInfo)
     pfamCompPath = os.path.join(conf.resultsFolder, filename + "_pFamSideBySide.txt")
     with open(pfamCompPath, "w") as f:
-        f.write(comparePFamVis)
+        f.write(vis.visualizePFamComparison(moduleFamilyInfo,pFamDict))
+
+    # dump the border files for future comparison
+    myBordersPath = os.path.join(conf.resultsFolder, filename + "_myBorders.cpickle")
+    pFamBordersPath = os.path.join(conf.resultsFolder, filename + "_pfamBorders.cpickle")
+    dump(moduleFamilyInfo, open(myBordersPath, "wb"))
+    dump(pFamDict, open(pFamBordersPath, "wb"))
+
 
 
 def main():
