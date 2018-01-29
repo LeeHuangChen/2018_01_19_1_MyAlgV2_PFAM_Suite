@@ -4,6 +4,7 @@ from src import blast_suite as blast
 from src import build_HSPInt_graph as buildGraph
 from src import defineBordersFromGraph as findBorders
 from src import visualization as vis
+from src import PFAMComparison as pfamComp
 from cPickle import dump
 import os
 import datetime
@@ -81,7 +82,11 @@ def runAlg(FamNames, filename):
         f.write("RemoveSubModules: \n" + moduleResult + "\n")
         f.write("Final Module Definition: " + str(numModulesAfterFilter) + "\n" + moduleResultRenamed + "\n")
 
-
+    # compare the borders with pfam definitions side by side
+    comparePFamVis = pfamComp.visualizeResultsWithPFam(moduleFamilyInfo)
+    pfamCompPath = os.path.join(conf.resultsFolder, filename + "_pFamSideBySide.txt")
+    with open(pfamCompPath, "w") as f:
+        f.write(comparePFamVis)
 
 
 def main():
@@ -104,5 +109,11 @@ def main():
     runAlg(famNames, filename)
 
 
+def test():
+    pfamComp.generatePFamInfoByProtein()
+
+
 if __name__ == '__main__':
+    # test()
     main()
+

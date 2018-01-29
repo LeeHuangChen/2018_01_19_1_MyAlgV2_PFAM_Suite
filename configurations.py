@@ -14,12 +14,15 @@ blastdbFolder = "Generated/2_BlastDB"
 alltoallFolder = "Generated/3_BlastAllToAll"
 resultsFolder = "Results"
 
-# Sequence Generation
+# Resources
 FastaSeqDict = "Resources/FastaSeqDict.cpickle"
 FamToArrDictLoc = "Resources/FamToLineDict.cpickle"
 familiesFile = "Resources/familyCount.txt"
+pFamToLabelFile = "Resources/pFamToLabels.txt"
+PFamInfoByProteinFile = "Resources/PFamInfoByProtein.cpickle"
 
 # Blast all to all
 outputformat = 6
 alltoallLogFolder = "Generated/log/BlastAllToAll"
 blastdbLogFolder = "Generated/log/2_BlastDB"
+
