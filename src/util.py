@@ -1,6 +1,7 @@
 import os
 import stat
 import sys
+import configurations as conf
 
 
 # generate all the directories needed for the given path (helper function)
@@ -19,7 +20,8 @@ def generateDirectoriesMult(paths):
 
 
 def printL(string):
-    with open("log.txt", "a") as f:
+    generateDirectoriesMult(conf.logFolder)
+    with open(conf.logFile, "a") as f:
         f.write(string)
         sys.stdout.write(string)
         sys.stdout.flush()

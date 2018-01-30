@@ -15,6 +15,8 @@ deleteFolders = True
 # Location of runtime information
 runTimefolder = "Results"
 runTimeFile = "Results/$RuntimeInfo.txt"
+logFolder = "Results"
+logFile = "Results/log.txt"
 
 # Location of saved progress (in the event of crashes)
 savedProgressFolder = "Generated"
