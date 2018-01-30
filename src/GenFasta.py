@@ -1,6 +1,7 @@
 
 import configurations as conf
 from cPickle import load
+import util
 
 
 def toFastaString(desc, seq):
@@ -64,7 +65,10 @@ def GenerateFastaInputForMultiFamilies(famNames, outfiledir):
     open(outfiledir, "w")
     for pid in proteinIDs:
         with open(outfiledir, "a") as f:
-            f.write(toFastaString(pid, pidToBioSeqDict[pid]))
+            if pid in pidToBioSeqDict.keys():
+                f.write(toFastaString(pid, pidToBioSeqDict[pid]))
+            else:
+                util.printL("protein, "+pid+", is not found in the fasta sequence provided.\n")
 
 
 def main():

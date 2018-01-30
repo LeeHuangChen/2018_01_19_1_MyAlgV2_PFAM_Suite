@@ -18,6 +18,13 @@ def generateDirectoriesMult(paths):
         generateDirectories(path)
 
 
+def printL(string):
+    with open("log.txt", "a") as f:
+        f.write(string)
+        sys.stdout.write(string)
+        sys.stdout.flush()
+
+
 def progressbar(i, length, numberNotification):
     scale = length / numberNotification
     if scale > 0:

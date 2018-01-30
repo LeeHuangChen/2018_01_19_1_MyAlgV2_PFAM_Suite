@@ -8,6 +8,8 @@ from src import PFAMComparison as pfamComp
 from cPickle import dump
 import os
 import datetime
+import shutil
+import time
 
 
 def read_families():
@@ -51,7 +53,7 @@ def runAlg(FamNames, filename):
     blast.alltoallBlastP(conf.fastaFolder, filename,os.path.join(alltoallFolder, filename))
 
     # build HSPIntGraph
-    seqSimGraph = buildGraph.build_graph(filename, conf.alltoallFolder)
+    seqSimGraph, numBlastLines, numIntEdge = buildGraph.build_graph(filename, conf.alltoallFolder)
 
     # identify protein module borders
     # putative domains
@@ -78,6 +80,8 @@ def runAlg(FamNames, filename):
 
     detailedPath = os.path.join(conf.resultsFolder, filename + "_detailedResults.txt")
     with open(detailedPath, "w") as f:
+        f.write("number of Blast Edges:"+str(numBlastLines)+"\n")
+        f.write("number of IntervalEdges added:"+str(numIntEdge)+"\n")
         f.write("Putative Domains: " + str(numModules) + "\n" + putativeResult + "\n")
         f.write("RemoveSubModules: \n" + moduleResult + "\n")
         f.write("Final Module Definition: " + str(numModulesAfterFilter) + "\n" + moduleResultRenamed + "\n")
@@ -94,6 +98,11 @@ def runAlg(FamNames, filename):
     dump(moduleFamilyInfo, open(myBordersPath, "wb"))
     dump(pFamDict, open(pFamBordersPath, "wb"))
 
+    # remove extra folders to safe disk space
+    if conf.deleteFolders:
+        shutil.rmtree(conf.proteinLenFolder)
+        shutil.rmtree(conf.blastdbFolder)
+        shutil.rmtree(conf.alltoallFolder)
 
 
 def main():
@@ -101,19 +110,39 @@ def main():
     families = read_families()
     families.sort(key=lambda x: x[0])
 
-    # famNames = []
-    # util.generateDirectories(conf.resultsFolder)
-    #
-    # for family in families:
-    #
-    #     famNames.append(family[1])
-    #
-    #     filename = datetime.datetime.now().strftime("%Y%m%d_%I%p") + "_" + famNames[0]
-    # #runAlg([families[1], families[2]])
+    famNames = []
+    famNumProt = []
+    util.generateDirectories(conf.resultsFolder)
 
-    famNames = ["Neur_chan_memb"]
-    filename = datetime.datetime.now().strftime("%Y%m%d_%I%p") + "_" + famNames[0]
-    runAlg(famNames, filename)
+    numProtCount = 0
+
+    for family in families:
+        if family[0] >= conf.minNumProteinInFamily:
+            numProtCount += family[0]
+            famNames.append(family[1])
+            famNumProt.append(family[0])
+
+            if numProtCount > conf.numProteinInDataset:
+                filename = datetime.datetime.now().strftime("%Y%m%d_%I%p") + "_" + famNames[0]
+                filedir = os.path.join(conf.resultsFolder, filename + "_FamilyInfo.txt")
+                with open(filedir, "w") as f:
+                    f.write("NumProt\tFamily Name")
+                    for i, famName in enumerate(famNames):
+                        f.write(str(famNumProt[i])+"\t"+famName+"\n")
+
+                #run my algorithm on the set of families
+                util.printL("\nRunning Custom Dataset: "+filename+"\n")
+                util.printL(" ( Family info located in: "+filedir+")\n")
+                runAlg(famNames, filename)
+                numProtCount = 0
+                famNames = []
+                famNumProt = []
+
+    #runAlg([families[1], families[2]])
+
+    # famNames = ["Neur_chan_memb"]
+    # filename = datetime.datetime.now().strftime("%Y%m%d_%I%p") + "_" + famNames[0]
+    # runAlg(famNames, filename)
 
 
 def test():

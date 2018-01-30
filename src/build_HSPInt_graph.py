@@ -160,15 +160,16 @@ def build_graph(blastInfoFilename, blastdir):
     nodeNames = {}
 
     # load protein lengths (this assumes that the filename is the same as the input filename
-    protLenDict=load(open(os.path.join(conf.proteinLenFolder, blastInfoFilename), "rb"))
+    protLenDict = load(open(os.path.join(conf.proteinLenFolder, blastInfoFilename), "rb"))
 
     numlines = len(open(os.path.join(blastdir, blastInfoFilename), "r").readlines())
     # add the HSP edges
     util.progressbarGuide(20)
+    numBlastLines = 0
     with open(os.path.join(blastdir, blastInfoFilename), "r") as f:
         for i, line in enumerate(f):
             util.progressbar(i, numlines, 20)
-
+            numBlastLines += 1
             if len(line) > 0:
                 hsp = read_HSP(line)
                 goodeval = hsp["EValue"] < evalueCutoff
@@ -211,7 +212,8 @@ def build_graph(blastInfoFilename, blastdir):
                 for overlapPair in overlapPairs:
                     g.add_edge(overlapPair[0], overlapPair[1])
                     numIntEdge += 1
-    print "number of IntervalEdges added:", numIntEdge
+    util.printL("Number of Blast Edges: "+str(numBlastLines)+"\n")
+    util.printL("number of IntervalEdges added: "+str(numIntEdge)+"\n")
     # # save the HSPIntGraph
     # splitFilename = blastInfoFilename.split(".")
     # fileExt = "." + splitFilename[len(splitFilename) - 1]
@@ -220,7 +222,7 @@ def build_graph(blastInfoFilename, blastdir):
     # with open(outputPath, 'wb') as fout:
     #     dump(g, fout, HIGHEST_PROTOCOL)
 
-    return g
+    return g, numBlastLines, numIntEdge
 
 
 # def main(blastInfoFilename):

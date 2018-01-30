@@ -7,6 +7,11 @@ simularProteinRatio = .90
 
 numProteinInDataset = 1000
 
+minNumProteinInFamily = 50
+
+# delete generated folder from 1-3 to safe disk space
+deleteFolders = True
+
 # main core folders
 fastaFolder = "Generated/0_FastaSequence"
 proteinLenFolder = "Generated/1_ProteinLength"
