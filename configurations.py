@@ -12,12 +12,21 @@ minNumProteinInFamily = 50
 # delete generated folder from 1-3 to safe disk space
 deleteFolders = True
 
+# Location of runtime information
+runTimefolder = "Results"
+runTimeFile = "Results/$RuntimeInfo.txt"
+
+# Location of saved progress (in the event of crashes)
+savedProgressFolder = "Generated"
+savedProgress = "Generated/savedProgress.cpickle"
+
 # main core folders
 fastaFolder = "Generated/0_FastaSequence"
 proteinLenFolder = "Generated/1_ProteinLength"
 blastdbFolder = "Generated/2_BlastDB"
 alltoallFolder = "Generated/3_BlastAllToAll"
-resultsFolder = "Results"
+textResultsFolder = "Results/Text"
+pickledResultsFolder = "Results/cpickle"
 
 # Resources
 FastaSeqDict = "Resources/FastaSeqDict.cpickle"

@@ -1,0 +1,108 @@
+
+Running Custom Dataset: 20180130_01PM_Urease_alpha
+ ( Family info located in: Results/Text/20180130_01PM_Urease_alpha_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 5DZS, is not found in the fasta sequence provided.
+Number of Blast Edges: 54544
+number of IntervalEdges added: 61678
+Completed in 1.52213406563 seconds
+
+Running Custom Dataset: 20180130_01PM_TetR_C
+ ( Family info located in: Results/Text/20180130_01PM_TetR_C_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 3WXI, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 3WXK, is not found in the fasta sequence provided.
+protein, 3WXL, is not found in the fasta sequence provided.
+
+Running Custom Dataset: 20180130_01PM_TetR_C
+ ( Family info located in: Results/Text/20180130_01PM_TetR_C_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 3WXI, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 3WXK, is not found in the fasta sequence provided.
+protein, 3WXL, is not found in the fasta sequence provided.
+
+Running Custom Dataset: 20180130_02PM_Urease_alpha
+Progress: 0.08 % ( Family info located in: Results/Text/20180130_02PM_Urease_alpha_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 5DZS, is not found in the fasta sequence provided.
+Number of Blast Edges: 54544
+number of IntervalEdges added: 61678
+Completed in 1.30183410645 seconds
+
+Running Custom Dataset: 20180130_02PM_TetR_C
+Progress: 0.18 % ( Family info located in: Results/Text/20180130_02PM_TetR_C_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 3WXI, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 3WXK, is not found in the fasta sequence provided.
+protein, 3WXL, is not found in the fasta sequence provided.
+Number of Blast Edges: 44585
+number of IntervalEdges added: 29560
+Completed in 0.794842004776 seconds
+
+Running Custom Dataset: 20180130_02PM_Gla
+Progress: 0.26 % ( Family info located in: Results/Text/20180130_02PM_Gla_FamilyInfo.txt)
+protein, 4V59, is not found in the fasta sequence provided.
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 3WXI, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 3WXK, is not found in the fasta sequence provided.
+protein, 3WXL, is not found in the fasta sequence provided.
+
+Running Custom Dataset: 20180130_02PM_Gla
+Progress: 0.26 % ( Family info located in: Results/Text/20180130_02PM_Gla_FamilyInfo.txt)
+protein, 4V59, is not found in the fasta sequence provided.
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 3WXI, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 3WXK, is not found in the fasta sequence provided.
+protein, 3WXL, is not found in the fasta sequence provided.
+Number of Blast Edges: 47312
+number of IntervalEdges added: 26069
+Completed in 0.716240882874 seconds
+
+Running Custom Dataset: 20180130_02PM_GMC_oxred_N
+Progress: 0.35 % ( Family info located in: Results/Text/20180130_02PM_GMC_oxred_N_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 4YNN, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 5DVY, is not found in the fasta sequence provided.
+protein, 3PV3, is not found in the fasta sequence provided.
+Number of Blast Edges: 46239
+number of IntervalEdges added: 19313
+Completed in 0.576622009277 seconds
+
+Running Custom Dataset: 20180130_02PM_Glycos_trans_3N
+Progress: 0.43 % ( Family info located in: Results/Text/20180130_02PM_Glycos_trans_3N_FamilyInfo.txt)
+
+Running Custom Dataset: 20180130_02PM_   19_Urease_alpha
+Progress: 0.08 % ( Family info located in: Results/Text/20180130_02PM_   19_Urease_alpha_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 5DZS, is not found in the fasta sequence provided.
+Number of Blast Edges: 0
+number of IntervalEdges added: 0
+Completed in 0.00102400779724 seconds
+
+Running Custom Dataset: 20180130_02PM_   39_TetR_C
+Progress: 0.18 % ( Family info located in: Results/Text/20180130_02PM_   39_TetR_C_FamilyInfo.txt)
+
+Running Custom Dataset: 20180130_02PM_00019_Urease_alpha
+Progress: 0.08 % ( Family info located in: Results/Text/20180130_02PM_00019_Urease_alpha_FamilyInfo.txt)
+protein, 4D5Y, is not found in the fasta sequence provided.
+protein, 3JAN, is not found in the fasta sequence provided.
+protein, 4D67, is not found in the fasta sequence provided.
+protein, 5DZS, is not found in the fasta sequence provided.
