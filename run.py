@@ -97,7 +97,7 @@ def runAlg(FamNames, filename):
 
     # Write down the timing results
     with open(conf.runTimeFile, "a") as f:
-        f.write(str(numBlastLines)+"\t"+str(timediff)+"\t"+filename)
+        f.write(str(numBlastLines)+"\t"+str(timediff)+"\t"+filename+"\n")
 
     # compare the borders with pfam definitions side by side
     pFamDict = pfamComp.correspondingPFamDict(moduleFamilyInfo)
