@@ -20,7 +20,7 @@ def generateDirectoriesMult(paths):
 
 
 def printL(string):
-    generateDirectoriesMult(conf.logFolder)
+    generateDirectories(conf.logFolder)
     with open(conf.logFile, "a") as f:
         f.write(string)
         sys.stdout.write(string)
