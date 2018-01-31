@@ -151,8 +151,10 @@ def main():
     # calculate total number of proteins in all of analysis (for progress searching)
     totNumProt = 0
     for family in families:
-        totNumProt += family[0]
+        if family[0] >= conf.minNumProteinInFamily:
+            totNumProt += family[0]
 
+    print "len(families):", len(families)
     for j in range(loadIndex, len(families)):
         family = families[j]
         if family[0] >= conf.minNumProteinInFamily:
